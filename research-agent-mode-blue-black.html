@@ -1,0 +1,454 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Research Agent Mode</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0f172a;
+    color: #f1f5f9;
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 32px 16px 48px;
+  }
+
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 2px solid #3b82d4;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .badge {
+    background: #3b82d4;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  .header-text h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f1f5f9;
+    letter-spacing: -0.01em;
+  }
+
+  .header-text p {
+    color: #94a3b8;
+    font-size: 13px;
+    margin-top: 2px;
+  }
+
+  /* Section */
+  .section {
+    background: #1e293b;
+    border: 1px solid #1e40af33;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #3b82d4;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #1e40af44;
+  }
+
+  .section p {
+    color: #cbd5e1;
+    font-size: 13.5px;
+    line-height: 1.7;
+  }
+
+  /* Slug row */
+  .meta-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .meta-chip {
+    background: #0f172a;
+    border: 1px solid #1e40af66;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+
+  .meta-chip span {
+    color: #7dd3fc;
+    font-weight: 600;
+  }
+
+  /* Capabilities grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .cap-card {
+    background: #0f172a;
+    border: 1px solid #1e40af44;
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+
+  .cap-card .cap-icon {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  .cap-card .cap-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #e2e8f0;
+    letter-spacing: 0.02em;
+  }
+
+  .cap-card .cap-desc {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  /* Persona highlights */
+  .highlights {
+    list-style: none;
+    margin-top: 4px;
+  }
+
+  .highlights li {
+    color: #cbd5e1;
+    font-size: 13px;
+    padding: 5px 0;
+    border-bottom: 1px solid #1e293b;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .highlights li:last-child { border-bottom: none; }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #3b82d4;
+    margin-top: 7px;
+    flex-shrink: 0;
+  }
+
+  /* Color palette swatches */
+  .swatches {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+
+  .swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #0f172a;
+    border: 1px solid #1e40af44;
+    border-radius: 6px;
+    padding: 8px 12px;
+  }
+
+  .swatch-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid #ffffff1a;
+    flex-shrink: 0;
+  }
+
+  .swatch-info .swatch-hex {
+    font-size: 11px;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-family: "Consolas", "Menlo", monospace;
+  }
+
+  .swatch-info .swatch-role {
+    font-size: 10px;
+    color: #64748b;
+  }
+
+  /* Activation callout */
+  .callout {
+    background: #1e40af22;
+    border: 1px solid #3b82d4;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .callout-body .callout-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #7dd3fc;
+    margin-bottom: 4px;
+  }
+
+  .callout-body p {
+    font-size: 12.5px;
+    color: #94a3b8;
+    line-height: 1.6;
+  }
+
+  code {
+    background: #0f172a;
+    border: 1px solid #1e40af55;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: "Consolas", "Menlo", monospace;
+    font-size: 12px;
+    color: #7dd3fc;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid #1e293b;
+    margin-top: 40px;
+    padding-top: 16px;
+    text-align: center;
+    color: #334155;
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  
+  <div class="header">
+    <div>
+      <svg width="44" height="44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="44" height="44" rx="10" fill="#1e293b"></rect>
+        <rect x="1" y="1" width="42" height="42" rx="9" stroke="#3b82d4" stroke-width="1.5"></rect>
+        <circle cx="22" cy="18" r="6" stroke="#3b82d4" stroke-width="1.8"></circle>
+        <path d="M10 34c0-6.627 5.373-12 12-12s12 5.373 12 12" stroke="#3b82d4" stroke-width="1.8" stroke-linecap="round"></path>
+        <circle cx="22" cy="18" r="2.5" fill="#3b82d4"></circle>
+        <line x1="28" y1="24" x2="34" y2="30" stroke="#7dd3fc" stroke-width="1.5" stroke-linecap="round"></line>
+        <circle cx="34" cy="31" r="2.5" fill="#7dd3fc"></circle>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h1>Research Agent</h1>
+      <p>Custom Bob Mode — Blue &amp; Black Intelligence Theme</p>
+    </div>
+    <div style="margin-left:auto">
+      <div class="badge">Active</div>
+    </div>
+  </div>
+
+  
+  <div class="meta-row">
+    <div class="meta-chip">Slug: <span>research-agent</span></div>
+    <div class="meta-chip">Scope: <span>Workspace</span></div>
+    <div class="meta-chip">File: <span>.bob/custom_modes.yaml</span></div>
+    <div class="meta-chip">Hot-reload: <span>Instant</span></div>
+  </div>
+
+  
+  <div class="callout">
+    <div class="callout-icon">
+      <svg width="20" height="20" fill="none"><circle cx="10" cy="10" r="9" stroke="#3b82d4" stroke-width="1.5"></circle><path d="M10 9v5M10 6.5v.5" stroke="#7dd3fc" stroke-width="1.5" stroke-linecap="round"></path></svg>
+    </div>
+    <div class="callout-body">
+      <div class="callout-title">How to activate</div>
+      <p>Open the mode picker in Bob and select <code>Research Agent</code>. The mode is hot-loaded — no restart needed. It is scoped to this workspace only.</p>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-title">Persona</div>
+    <ul class="highlights">
+      <li><div class="dot"></div>Deep-research intelligence agent — analytical, precise, authoritative</li>
+      <li><div class="dot"></div>Structures every output with headings, tables, and executive summaries</li>
+      <li><div class="dot"></div>Prioritizes accuracy over speed, depth over surface coverage</li>
+      <li><div class="dot"></div>Separates facts from inferences — never speculates without labeling it</li>
+      <li><div class="dot"></div>Delivers findings with the precision of a research analyst, not a chatbot</li>
+      <li><div class="dot"></div>HTML reports use exclusively the Blue &amp; Black color palette</li>
+    </ul>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-title">When to Use</div>
+    <p>Deep research &amp; synthesis, source analysis, topic breakdowns, competitive intelligence, technical investigations, structured research reports, data comparison tables, and any task requiring rigorous factual depth.</p>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-title">Capabilities (Permission Groups)</div>
+    <div class="grid">
+      <div class="cap-card">
+        <div class="cap-name">read</div>
+        <div class="cap-desc">File reading &amp; symbol lookup</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">edit</div>
+        <div class="cap-desc">File writing &amp; modification</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">execute</div>
+        <div class="cap-desc">Shell command execution</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">skill</div>
+        <div class="cap-desc">Load skill instructions</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">todo</div>
+        <div class="cap-desc">Task tracking &amp; todo lists</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">subagent</div>
+        <div class="cap-desc">Spawn parallel subagents</div>
+      </div>
+      <div class="cap-card">
+        <div class="cap-name">mode</div>
+        <div class="cap-desc">Switch between modes</div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-title">Blue &amp; Black Color Palette</div>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0f172a"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#0f172a</div>
+          <div class="swatch-role">Background</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1e293b"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#1e293b</div>
+          <div class="swatch-role">Surface</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1e40af"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#1e40af</div>
+          <div class="swatch-role">Deep Blue</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#3b82d4"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#3b82d4</div>
+          <div class="swatch-role">Accent Blue</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#7dd3fc"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#7dd3fc</div>
+          <div class="swatch-role">Sky Highlight</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#f1f5f9;border-color:#334155"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#f1f5f9</div>
+          <div class="swatch-role">Text</div>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#94a3b8"></div>
+        <div class="swatch-info">
+          <div class="swatch-hex">#94a3b8</div>
+          <div class="swatch-role">Muted Text</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="section">
+    <div class="section-title">Config Location</div>
+    <p style="font-family:'Consolas','Menlo',monospace;font-size:12px;color:#7dd3fc;line-height:2">
+      .bob/custom_modes.yaml<br />
+      <span style="color:#64748b">slug:</span> <span style="color:#e2e8f0">research-agent</span><br />
+      <span style="color:#64748b">groups:</span> <span style="color:#e2e8f0">read, edit, execute, skill, todo, subagent, mode</span>
+    </p>
+  </div>
+
+</div>
+
+<footer>Made with IBM Bob</footer>
+<script>
+  window.wxOConfiguration = {
+    orchestrationID: "682f3dba3df8489cb9d701926c624f05_0bf6af0b-4fb7-46af-a855-adfa298b5012",
+    hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+    rootElementID: "root",
+    deploymentPlatform: "ibmcloud",
+    crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/682f3dba3df8489cb9d701926c624f05:0bf6af0b-4fb7-46af-a855-adfa298b5012::",
+    chatOptions: {
+        agentId: "e43331cd-eb17-4302-bc60-812a4900de4e", 
+    }
+  };
+  setTimeout(function () {
+    const script = document.createElement('script');
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.addEventListener('load', function () {
+        wxoLoader.init();
+    });
+    document.head.appendChild(script);
+  }, 0);                     
+</script>
+</body>
+</html>
